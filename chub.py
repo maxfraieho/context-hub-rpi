@@ -179,7 +179,7 @@ def print_error(message: str, code: int = 1) -> None:
 def init() -> None:
     """Create ~/.chub/."""
     ensure_store()
-    console.print(f"Initialized context registry at {CHUB_DIR}")
+    console.print(f"Initialized context registry at {CHUB_DIR}", markup=False)
 
 
 @app.command()
@@ -205,7 +205,7 @@ def add(path: str) -> None:
         added += 1
 
     save_index(sorted(docs, key=lambda doc: doc.added_at))
-    console.print(f"Added {added} document(s); skipped {skipped} already indexed.")
+    console.print(f"Added {added} document(s); skipped {skipped} already indexed.", markup=False)
 
 
 @app.command("list")
@@ -220,7 +220,7 @@ def list_docs() -> None:
 
     for doc in docs:
         table.add_row(doc.id, doc.title, doc.path, ",".join(doc.tags))
-    console.print(table)
+    console.print(table, markup=False)
 
 
 def match_title(doc: IndexedDoc, query: str) -> bool:
@@ -261,12 +261,12 @@ def search(q: str) -> None:
             continue
 
         any_match = True
-        console.print(f"[{doc.id}] {doc.title} :: {doc.path}")
+        console.print(f"[{doc.id}] {doc.title} :: {doc.path}", markup=False)
         if title_hit:
-            console.print("title match")
+            console.print("title match", markup=False)
         for line_no, line in content_hits:
-            console.print(f"{line_no}: {line}")
-        console.print()
+            console.print(f"{line_no}: {line}", markup=False)
+        console.print(markup=False)
 
     if not any_match:
         raise typer.Exit(1)
@@ -295,15 +295,15 @@ def annotate(
     annotations = load_annotations()
     if list_annotations:
         if not annotations:
-            console.print("No annotations.")
+            console.print("No annotations.", markup=False)
             return
         docs = {doc.id: doc for doc in load_index()}
         for current_id in sorted(annotations):
             title = docs[current_id].title if current_id in docs else "<missing>"
-            console.print(f"[{current_id}] {title}")
+            console.print(f"[{current_id}] {title}", markup=False)
             for entry in annotations[current_id]:
-                console.print(f"- {entry}")
-            console.print()
+                console.print(f"- {entry}", markup=False)
+            console.print(markup=False)
         return
 
     if doc_id is None or note is None:
@@ -312,7 +312,7 @@ def annotate(
     get_doc_by_id(doc_id, load_index())
     annotations.setdefault(doc_id, []).append(note)
     save_annotations(annotations)
-    console.print(f"Annotated {doc_id}")
+    console.print(f"Annotated {doc_id}", markup=False)
 
 
 def format_size(size_bytes: int) -> str:
@@ -334,10 +334,10 @@ def stats() -> None:
     annotations = load_annotations()
     annotation_count = sum(len(items) for items in annotations.values())
     total_size = sum(doc.size_bytes for doc in docs)
-    console.print(f"total docs: {len(docs)}")
-    console.print(f"total size: {format_size(total_size)}")
-    console.print(f"annotation count: {annotation_count}")
-    console.print(f"path: {CHUB_DIR}")
+    console.print(f"total docs: {len(docs)}", markup=False)
+    console.print(f"total size: {format_size(total_size)}", markup=False)
+    console.print(f"annotation count: {annotation_count}", markup=False)
+    console.print(f"path: {CHUB_DIR}", markup=False)
 
 
 def main() -> None:
