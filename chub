@@ -1,0 +1,2 @@
+#!/bin/bash
+exec "$HOME/.venvs/chub/bin/python" "$(dirname "$0")/chub.py" "$@"
