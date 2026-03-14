@@ -1,2 +1,7 @@
 #!/bin/bash
-exec "$HOME/.venvs/chub/bin/python" "$(dirname "$0")/chub.py" "$@"
+set -euo pipefail
+
+SCRIPT_PATH="$(readlink -f "$0")"
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+
+exec "$HOME/.venvs/chub/bin/python" "$SCRIPT_DIR/chub.py" "$@"
